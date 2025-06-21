@@ -249,3 +249,8 @@ export interface RelevantHotelParams {
   entityType: string;
   localizedName: string;
 }
+
+export interface AirportSearchParams {
+  query: string;
+  locale: "en-US";
+}

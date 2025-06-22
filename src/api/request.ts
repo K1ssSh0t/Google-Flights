@@ -33,6 +33,8 @@ export const searchFlights = async (
   };
 
   try {
+    console.log("Fetching flight data with params:", params);
+    console.log("Request options:", options);
     const response = await axios.request(options);
     console.log("Flight data fetched successfully:", response.data);
     return response.data;

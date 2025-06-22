@@ -34,6 +34,7 @@ export const searchFlights = async (
 
   try {
     const response = await axios.request(options);
+    console.log("Flight data fetched successfully:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error fetching flight data:", error);

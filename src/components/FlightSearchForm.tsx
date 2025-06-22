@@ -13,7 +13,10 @@ import {
     InputLabel
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import type { FlightSearchParams } from '../types';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { Dayjs } from 'dayjs';
 
 interface FlightSearchFormProps {
     onSearch: (params: FlightSearchParams) => void;
@@ -21,11 +24,12 @@ interface FlightSearchFormProps {
 
 const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
     const [passengers, setPassengers] = useState(1);
+    const [date, setDate] = useState<Dayjs | null>(null);
     const [searchParams, setSearchParams] = useState<FlightSearchParams>({
-        originSkyId: '',
-        destinationSkyId: '',
-        originEntityId: '',
-        destinationEntityId: '',
+        originSkyId: 'LOND',
+        destinationSkyId: 'NYCA',
+        originEntityId: '27544008',
+        destinationEntityId: '27537542',
         date: '',
         cabinClass: 'economy',
         adults: 1,
@@ -37,7 +41,9 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
 
     const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
-        onSearch({ ...searchParams, adults: passengers });
+        console.log('Date:', date?.toISOString().split('T')[0]);
+
+        onSearch({ ...searchParams, adults: passengers, date: date ? date.toISOString().split('T')[0] : '' });
     };
 
 
@@ -61,12 +67,14 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
                     fullWidth
                     required
                 />
-                <DatePicker
-                    label="Date"
-                    value={searchParams.date}
-                    onChange={(newValue) => setSearchParams({ ...searchParams, date: newValue })}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                        label="Date"
+                        value={date}
+                        onChange={(newValue) => setDate(newValue)}
+                    />
+                </LocalizationProvider>
 
-                />
                 <RadioGroup
                     value={searchParams.cabinClass}
                     onChange={(e) => setSearchParams({ ...searchParams, cabinClass: e.target.value as "economy" | "premium_economy" | "business" | "first" })}

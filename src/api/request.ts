@@ -1,8 +1,8 @@
 import axios from "axios";
-import type { FlightSearchParams } from "../../types";
-import type { Data } from "../../types";
-import type { AirportSearchParams } from "../../types";
-import type { Daum } from "../../types";
+import type { FlightSearchParams } from "../types";
+import type { Data } from "../types";
+import type { AirportSearchParams } from "../types";
+import type { Daum } from "../types";
 
 const API_URL = "https://sky-scrapper.p.rapidapi.com/api/v1/flights/";
 const API_KEY = import.meta.env.VITE_API_KEY;

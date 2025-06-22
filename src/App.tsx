@@ -1,34 +1,60 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
+
+import { Container, CssBaseline, ThemeProvider, Typography, createTheme } from '@mui/material';
+import FlightSearchForm from './components/FlightSearchForm';
+import FlightResults from './components/FlightResults';
+import { searchFlights } from './api/request';
+import type { FlightSearchParams, Itinerary, Leg } from './types';
+
+
+
+const theme = createTheme({
+  palette: {
+    primary: { main: '#1a73e8' },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 8 }
+      }
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: { borderRadius: 8 }
+      }
+    }
+  }
+})
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [flights, setFlights] = useState<Itinerary[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleSearch = async (params: FlightSearchParams) => {
+    setLoading(true);
+    try {
+      const data = await searchFlights(params);
+      setFlights(data.itineraries);
+    } catch (error) {
+      console.error("Error fetching flights:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold' }}>
+          ✈️ Flight Search
+        </Typography>
+        <FlightSearchForm onSearch={handleSearch} />
+        <FlightResults flights={flights} isLoading={loading} />
+      </Container>
+    </ThemeProvider>
   )
 }
 

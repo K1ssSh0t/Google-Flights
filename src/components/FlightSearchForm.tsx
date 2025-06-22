@@ -98,3 +98,5 @@ const FlightSearchForm: React.FC<FlightSearchFormProps> = ({ onSearch }) => {
     )
 
 };
+
+export default FlightSearchForm;
